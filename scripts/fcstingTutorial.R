@@ -51,3 +51,33 @@ axis(1,at=1:12,labels=month.abb,cex=0.8)
 ## SAMPLE MONTHPLOT
 
 monthplot(tsdata)
+
+## SCATTER PLOT - TO FIND RELATION SHIP BETWEEN VARIABLES.
+# THIS CAN ALSO BE USED TO FIND THE STRENGTH OF THE RELATIONSHIP B/W A PREDICTOR VARIABLE AND PREDICTED VARIABLE
+
+plot(fuel[,5], fuel[,8], xlab="City mpg", ylab="Carbon footprint")
+
+# USE JITTER TO AVOID OVERLAPPING OF DATA
+
+plot(jitter(fuel[,5]), jitter(fuel[,8]), xlab="City mpg", ylab="Carbon footprint")
+
+## SCATTER PLOT MATRICES CAN ALSO BE USED WHERE THERE ARE MORE THAN ONE VARIABLE FOR WHICH THE SCATTER PLOT HAS TO BE FOUND
+
+pairs(fuel[,-c(1:2,4,7)], pch=10)
+
+# NOTE THAT SCATTER PLOT MAKE MORE SENSE TO BE USED WITH CONTINUOUS VARIABLES
+
+###################### NUMERICAL SUMMARIES #############################
+
+quantile(fuel$Carbon, probs = .1)
+fuel$Carbon
+IQR(fuel$Carbon)
+
+quantile(fuel$Carbon, probs = .75) - quantile(fuel$Carbon, probs = .25)
+sd(fuel$Carbon)
+
+###### AUTOCORRELATION
+
+# ACF ARE USED IN TIME SERIES FOR FINDING THE RELATION BETWEEN LAG T, and LAG K
+
+lag.plot(tsdata, lags = 12, pch=19, do.lines = F)

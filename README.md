@@ -62,7 +62,18 @@ The above graph of Antibiotic drug sales shows the following characteristics:
 
 Any model used to predict the antibiotic sales should take in to account on the seasonality, and the slow but steady raising trend.
 
-## TIME SERIES PATTERN
+## SEASONAL PLOT
+
+```R
+
+load("~/R Projects/Forecasting-Tutorial/dataSet/a10.rda")
+
+seasonplot(a10,
+ylab="$ million",
+xlab="Year", 
+main="Antidiabetic drug sales")
+
+```
 
 
 
