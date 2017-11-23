@@ -68,6 +68,7 @@ pairs(fuel[,-c(1:2,4,7)], pch=10)
 # NOTE THAT SCATTER PLOT MAKE MORE SENSE TO BE USED WITH CONTINUOUS VARIABLES
 
 ###################### NUMERICAL SUMMARIES #############################
+# PERCENTILES ARE USEFUL IN DESCRIBING THE DISTRIBUTION OF THE DATA
 
 quantile(fuel$Carbon, probs = .1)
 fuel$Carbon

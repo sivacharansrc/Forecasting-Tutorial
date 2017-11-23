@@ -16,7 +16,7 @@ CHOOSING AND FITTING MODELS:
 
 ## 2.1 GRAPHICS:
 
-```R
+```r
 load("~/R Projects/Forecasting-Tutorial/dataSet/melsyd.rda")
 
 plot(melsyd[,"Economy.Class"], 

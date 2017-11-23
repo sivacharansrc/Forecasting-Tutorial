@@ -1,0 +1,244 @@
+---
+title: "TimeSeries Forecasting"
+author: "Siva Chandrasekar"
+date: "November 19, 2017"
+output: html_document
+---
+
+```{r Loading Required Libraries, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+
+options(scipen = 999)
+library(dplyr)
+library(fpp)
+library(plotly)
+library(dygraphs)
+
+```
+
+
+# TIME SERIES FORECASTING
+This repository for Forecasting Tutorial using Rob Hyndmann's source
+
+This project has all the codes that will be described in Rob Hyndmann's tutorial available at https://www.otexts.org/fpp/1/1
+
+QUESTIONS TO BE ASKED BEFORE FORECASTING:
+
+- Are there consistent patterns?
+- Is there a significant trend?
+- Is seasonality important?
+- Are there any outliers in the data that needs expertise's knowledge?
+
+CHOOSING AND FITTING MODELS:
+
+- Always run different models to predict the forecast, and choose a best model out of the predicted models. Severl tests are available to measure the error's, minimize the errors that will be discussed eventually.
+
+```{r Reading Sample Time Series dataset, results='hide'}
+
+data <- read.csv("~/R Projects/Forecasting-Tutorial/dataSet/SampleData.csv", header = T)
+tsdata <- data$tsValue
+tsdata <- ts(tsdata, start = c(2010,9), end = c(2017,8), frequency = 12)
+head(tsdata)
+
+
+```
+
+## GRAPHICS:
+
+```{r A simple sample plot}
+load("~/R Projects/Forecasting-Tutorial/dataSet/melsyd.rda")
+
+plot(melsyd[,"Economy.Class"], 
+     main="Economy class passengers: Melbourne-Sydney",
+     xlab="Year",ylab="Thousands")
+
+
+
+```
+
+Looking at the plot for the Economy class, the following are evident at a first glance:
+
+- No passengers have travelled during part of the period in 1989 - This is due to some industrial dispute (SME input)
+
+- A period of reduced load in 1992
+
+- A large increase in passenge load in end of 1991
+
+- There are some large dips at the start of each year (holiday season)
+
+- Long term flucutations: increasing in 1987, then decreasing in 1989, then again increasing through 1991, 1992
+
+All the above observations should be accounted when building a model
+
+```{r Another Sample Plot}
+
+dygraph(tsdata, main = "Total Sales", ylab = "Sales in Mn") %>% 
+  dyRangeSelector() %>%
+  dyAxis("x", label = "Period") %>%
+  dyAxis("y", axisLabelFontSize = 10) %>%
+  dySeries(label = "Total Sales in USD") %>%
+  dyOptions(drawPoints=T, pointSize=3, maxNumberWidth = 20)
+
+```
+
+
+A simpler time series data is available below:
+
+```{r Plot of a Simpler Time Series data} 
+
+load("~/R Projects/Forecasting-Tutorial/dataSet/a10.rda")
+
+plot(a10,
+ylab="$ million",
+xlab="Year", 
+main="Antidiabetic drug sales")
+
+```
+
+The above graph of Antibiotic drug sales shows the following characteristics:
+
+- Clear increasing trend
+
+- seasonal pattern exists that increases as the level of the series increases
+
+- A dip at the end of each year (due to govt subsidization as provided by SME)
+
+Any model used to predict the antibiotic sales should take in to account on the seasonality, and the slow but steady raising trend.
+
+## SEASONAL PLOT AND MONTH PLOT
+
+These plots are mainly used to visualize the data by season or a cycle which provides better idea to the seasonality behind the data
+
+```{R Seasonplot and monthplot using sample dataset}
+
+load("~/R Projects/Forecasting-Tutorial/dataSet/a10.rda")
+
+seasonplot(a10,
+ylab="$ million",
+xlab="Year", 
+main="Antidiabetic drug sales")
+
+seasonplot(tsdata,
+     main = "Sample TS Data",
+     xlab="Year",
+     ylab="Sample Value",
+     year.labels=TRUE, 
+     year.labels.left=TRUE,
+     col = 1:8,
+     pch=8)
+
+monthplot(a10,ylab="$ million",xlab="Month",xaxt="n",
+          main="Seasonal deviation plot: antidiabetic drug sales")
+axis(1,at=1:12,labels=month.abb,cex=0.8)
+
+monthplot(tsdata,
+          main = "Sample TS Data",
+     xlab="Year",
+     ylab="Sample Value")
+
+```
+
+## SCATTER PLOT
+
+Scatter plots are useful to find the **relations betweek variables**. These plots can also be useful to find the strength of the relationship between a predictor variable and predicted variable.
+
+```{r Scatter Plot Sample}
+
+plot(fuel[,5], fuel[,8], xlab="City mpg", ylab="Carbon footprint")
+
+```
+
+In a scatterplot, *jitter function* is useful to avoid any overlapping of the data points.
+
+```{r Scatter Plot using Jitter function}
+
+plot(jitter(fuel[,5]), jitter(fuel[,8]), xlab="City mpg", ylab="Carbon footprint")
+
+```
+
+**Scatter Plot Matrices** are useful when there are more than two variables for which the relationship is to be determined. 
+
+```{r Pairs plot for comparing multiple continuous variable relationship}
+
+pairs(fuel[,-c(1:2,4,7)], pch=10)
+
+```
+
+
+Note that scatter plots should be used with *continuous variables* for finding the relationship. Ordinal or factors do not provide much information.
+
+# NUMERICAL SUMMARIES
+
+**Percentiles** are very useful for describing the distribution of the data. 
+
+```{r Finding distribution of data using percentiles}
+
+quantile(fuel$Carbon, probs = .1)
+fuel$Carbon
+IQR(fuel$Carbon)
+
+quantile(fuel$Carbon, probs = .75) - quantile(fuel$Carbon, probs = .25)
+
+```
+
+
+**Standard Deviation** is also used to find the spread or the distribution of the data.
+
+```{r Standard Deviation}
+
+sd(fuel$Carbon)
+
+```
+
+## BIVARIATE STATISTICS
+
+Most common bivariate statistics is *correlation coefficient*. This is useful to measure the relationship between two variables. The expression can be explained as below:
+
+ $$r =\frac{\sum_ ( X_i - \bar{X} ) (Y_i - \bar{Y})}{\sqrt{\sum_ ( X_i - \bar{X} )^2} \sqrt{\sum_ ( Y_i - \bar{Y} )^2}}$$
+
+The value of correlation coefficient lies between -1 and +1, the positive values indicating linear relationship, whereas the negative values represent non-linear relationship.
+
+## AUTO CORRELATION FACTOR
+
+**Auto Correlation Factor (ACF)** are used in Time Series for finding the relation between lagged values of time series. For instance, $r_1$  measures the relation between time $y_t$ and $y_{t_-1}$, and $r_2$ measures the relationship between $y_t$ and $y_{t-2}$
+
+```{r Auto Correlation Factor}
+
+lag.plot(tsdata, lags = 12, pch=19, do.lines = F, col = 3)
+
+```
+
+*ACF* can be written as:
+
+$$r_k = \frac{\sum_{t=K+1}^T (y_t - \bar{y}) (y_{t-k} - \bar{y})}{\sum_{t=1}^T (y_t - \bar{y})^2} $$
+
+The ACF between different lags are normally plotted to form the autocorrelation graphs or the correlogram. A sample of ACF is given below:
+
+```{r ACF Plots}
+
+beer2 <- window(ausbeer, start=1992, end=2006-.1)
+
+plot(beer2)
+
+acf(beer2)
+
+acf(tsdata)
+
+```
+     
+In the beer plot, we can see that there are spikes for every 4 lags, and troughs for every two lags before the spikes. This can also mean that the data has some kind of seasonality every four months
+
+## WHITE NOISE
+
+A scenario where a time series data shows no correlation. 
+
+```{r White Noise Plots}
+set.seed(30)
+x <- ts(rnorm(50))
+plot(x, main="White noise")
+acf(x)
+```
+
+
+In white noise, the expectation is that the ACF is close to zero. In other words, 95% of the ACF lies within $\pm \frac{2}{\sqrt{T}}$ where T is the length of time series
+
+# SIMPLE FORECASTING METHODS
