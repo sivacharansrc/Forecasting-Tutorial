@@ -38,7 +38,8 @@ CHOOSING AND FITTING MODELS:
 data <- read.csv("~/R Projects/Forecasting-Tutorial/dataSet/SampleData.csv", header = T)
 tsdata <- data$tsValue
 tsdata <- ts(tsdata, start = c(2010,9), end = c(2017,8), frequency = 12)
-head(tsdata)
+
+#head(tsdata)
 
 
 ```
@@ -243,3 +244,20 @@ acf(x)
 In white noise, the expectation is that the ACF is close to zero. In other words, 95% of the ACF lies within $\pm \frac{2}{\sqrt{T}}$ where T is the length of time series
 
 # SIMPLE FORECASTING METHODS
+
+Some forecasting methods are very simple but surprisingly effective. There are four simple forecasting methods that can be used for benchmarking purpose.
+
+## AVERAGE METHOD:
+
+Simply done by taking the forecast of the historical values. 
+
+$$\hat{y}_{T+h|T} = \bar{y} = (y_1 + ... + y_T) / T$$
+
+The average method is not only applicable to timeseries data, but also applicable for other cross sectional data. All the other methods are applicable only to Time Series data sets.
+
+```{r Average Method for Forecasting}
+meanf(tsdata, 12)
+
+```
+
+
