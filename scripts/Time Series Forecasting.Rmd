@@ -1,5 +1,6 @@
+
 ---
-title: "TimeSeries Forecasting"
+title: "Time Series Forecasting"
 author: "Siva Chandrasekar"
 date: "November 19, 2017"
 output: html_document
@@ -37,7 +38,8 @@ CHOOSING AND FITTING MODELS:
 data <- read.csv("~/R Projects/Forecasting-Tutorial/dataSet/SampleData.csv", header = T)
 tsdata <- data$tsValue
 tsdata <- ts(tsdata, start = c(2010,9), end = c(2017,8), frequency = 12)
-head(tsdata)
+
+#head(tsdata)
 
 
 ```
@@ -242,3 +244,120 @@ acf(x)
 In white noise, the expectation is that the ACF is close to zero. In other words, 95% of the ACF lies within $\pm \frac{2}{\sqrt{T}}$ where T is the length of time series
 
 # SIMPLE FORECASTING METHODS
+
+Some forecasting methods are very simple but surprisingly effective. There are four simple forecasting methods that can be used for benchmarking purpose.
+
+## AVERAGE METHOD:
+
+Simply done by taking the forecast of the historical values. 
+
+$$\hat{y}_{T+h|T} = \bar{y} = (y_1 + ... + y_T) / T$$
+
+The average method is not only applicable to timeseries data, but also applicable for other cross sectional data. All the other methods are applicable only to Time Series data sets.
+
+```{r Average Method for Forecasting}
+meanf(tsdata, 12)
+
+```
+
+## NAIVE METHOD
+
+This method works on the pricinple that all future values are based on the last observed value ($y_T$). This works remarkable well for economic and financial timeseries.
+
+```{r Naive Method}
+
+naive(tsdata, 12)
+
+rwf(tsdata, 12) #Alternate way
+
+```
+
+## SEASONAL NAIVE:
+
+Forecast is said to be the last observed value from the previous season. This method works very good for seasonal data. 
+
+$$y_{t+h-km} \hspace{0.2cm} where\hspace{0.2cm}m=seasonal\hspace{0.2cm}period,\hspace{0.2cm}k={(h-1)/T}+1$$
+where $k={(h-1)/T}$ is the integar part of the calculation. 
+
+```{r Seasonal Naive}
+
+snaive(tsdata, 12)
+
+tail(tsdata, 12) #For reference. 
+
+```
+
+## Drift Method for forecasting
+
+A variation of the Naive method where the forecasts are allowed to increase or decrease, based on the amount of change over time (the drift) is set to be the average change seen in the historical data
+
+$$y_T+\frac{h}{T-1}\hspace{0.2cm}\sum_{t=2}^T\hspace{0.2cm}(y_t-y_{t-1})\hspace{0.2cm}=\hspace{0.2cm}y_T + h(\frac{y_T-y_1}{T-1})$$
+
+This is equal to drawing a line from 1st observation to last observation, and extrapolating the line to predict the forecast.
+
+```{r Drift Method}
+
+rwf(tsdata,12, drift = T)
+
+```
+
+*Comparing all different types of forecast, and see how they perform on predicting future values*
+
+```{r Comparison of Simple Forecasting Methods}
+
+beer2 <- window(ausbeer,start=1992,end=2006-.1)
+beerfit1 <- meanf(beer2, h=11)
+beerfit2 <- naive(beer2, h=11)
+beerfit3 <- snaive(beer2, h=11)
+beerfit4 <- rwf(beer2,h=11,drift=T)
+
+plot(beerfit1, 
+  main="Forecasts for quarterly beer production", col=4)
+lines(beerfit2$mean,col=2)
+lines(beerfit3$mean,col=3)
+lines(beerfit4$mean, col=6)
+legend("bottomright",lty=1,col=c(4,2,3,6),
+  legend=c("Mean method","Naive method","Seasonal naive method", "Drift Method"))
+
+### COMPARISON WITH SAMPLE TS DATA
+
+ts2 <- window(tsdata,start=c(2010,9),end=c(2016,8))
+tsfit1 <- meanf(ts2, h=11)
+tsfit2 <- naive(ts2, h=11)
+tsfit3 <- snaive(ts2, h=11)
+tsfit4 <- rwf(ts2,h=11,drift=T)
+
+plot(tsfit1, 
+  main="Forecasts for quarterly beer production", col=4)
+lines(tsfit2$mean,col=2)
+lines(tsfit3$mean,col=3)
+lines(tsfit4$mean, col=6)
+legend("bottomleft",lty=1,col=c(4,2,3,6),
+  legend=c("Mean method","Naive method","Seasonal naive method", "Drift Method"))
+
+```
+# TRANSFORMATIONS AND ADJUSTMENTS:
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
