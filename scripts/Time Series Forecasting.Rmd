@@ -20,7 +20,7 @@ library(dygraphs)
 # TIME SERIES FORECASTING
 This repository for Forecasting Tutorial using Rob Hyndmann's source
 
-This project has all the codes that will be described in Rob Hyndmann's tutorial available at https://www.otexts.org/fpp/1/1
+This project has all the codes that will be described in Rob Hyndmann's tutorial available at https://www.otexts.org/fpp/2/4
 
 QUESTIONS TO BE ASKED BEFORE FORECASTING:
 
@@ -336,7 +336,21 @@ legend("bottomleft",lty=1,col=c(4,2,3,6),
   legend=c("Mean method","Naive method","Seasonal naive method", "Drift Method"))
 
 ```
+# TRANSFORMATIONS AND ADJUSTMENTS:
 
+**Transformations** are performed over time series data in order to simplify the pattern in the historical data by removing known variations or by making the patterns more consistent across the data. Four types of transformations exist: mathematical transformations, calendar adjustments, population adjustments, and inflation adjustments.
+
+# MATHEMATICAL TRANSFORMATIONS
+
+These are performed on time series which show an increasing or decreasing level. One such example of mathematical transformation is the lograthmic scale. If $y_t$ represents the time series data, then $w_t$ = $log(y_t)$.
+
+These transformations help to reduce the extensive variations in the datasets. Other similar transformations can be square root or cube root. 
+
+The **Box-Cox transformation** is a commonly used transformation that includes both log and power transformation. They depend on the parameter $\lambda$.
+
+
+
+  
 
 
 
