@@ -348,28 +348,33 @@ These transformations help to reduce the extensive variations in the datasets. O
 
 The **Box-Cox transformation** is a commonly used transformation that includes both log and power transformation. They depend on the parameter $\lambda$.
 
+```{r Box Cox Transformation Example}
+plot(elec, ylab="Un-Transformed electricity demand",
+ xlab="Year", main="Un-Transformed monthly electricity demand")
+
+plot(log(elec), ylab="Transformed electricity demand",
+ xlab="Year", main="Transformed monthly electricity demand")
+
+# The BoxCox.lambda() function will choose a value of lambda for you.
+lambda <- BoxCox.lambda(elec) # = 0.27
+plot(BoxCox(elec,lambda))
+
+plot(tsdata,main="TS Plot", xlab="Year", ylab="TS Value")
+
+# BOX COX FOR TSDATA
+
+lambda <- BoxCox.lambda(tsdata)
+plot(BoxCox(tsdata, lambda), main="Box-Cox Tranformation Plot", xlab="Year", ylab="TS Value")
 
 
-  
+```
 
 
+In the above graphs, the season variation is not clearly visible in the actual dataset. However, the plots with the log, and box cox transformation show a clear pattern on seasonality throughtout the series. When the seasonlaity become similar across the trend, it becomes easier for the time series models to pick them when forecasting.
 
+However, looking at the tsdata plot, a transformation may not be necessary.
 
+# CALENDAR ADJUSTMENTS:
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+These adjustments are done to elimate the differences due to the calendar period
 
