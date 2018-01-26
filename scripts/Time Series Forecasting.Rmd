@@ -11,7 +11,7 @@ output: html_document
 options(scipen = 999)
 library(dplyr)
 library(fpp)
-library(plotly)
+library(plotly) #install.packages(c(fpp,dygraphs))
 library(dygraphs)
 
 ```
