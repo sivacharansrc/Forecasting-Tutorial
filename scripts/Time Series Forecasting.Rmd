@@ -1,4 +1,4 @@
-
+getwd()
 ---
 title: "Time Series Forecasting"
 author: "Siva Chandrasekar"
@@ -7,12 +7,14 @@ output: html_document
 ---
 
 ```{r Loading Required Libraries, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
-
+rm(list = ls())
 options(scipen = 999)
 library(dplyr)
 library(fpp)
 library(plotly) #install.packages(c(fpp,dygraphs))
 library(dygraphs)
+wd <- "C:/Users/SSOMA/OneDrive - Monsanto/My R Projects/Machine Learning Projects/Time Series Forecasting/"
+
 
 ```
 
@@ -35,7 +37,7 @@ CHOOSING AND FITTING MODELS:
 
 ```{r Reading Sample Time Series dataset, results='hide'}
 
-data <- read.csv("~/R Projects/Forecasting-Tutorial/dataSet/SampleData.csv", header = T)
+data <- read.csv(paste0(wd,"dataSet/SampleData.csv"), header = T)
 tsdata <- data$tsValue
 tsdata <- ts(tsdata, start = c(2010,9), end = c(2017,8), frequency = 12)
 
@@ -47,7 +49,7 @@ tsdata <- ts(tsdata, start = c(2010,9), end = c(2017,8), frequency = 12)
 ## GRAPHICS:
 
 ```{r A simple sample plot}
-load("~/R Projects/Forecasting-Tutorial/dataSet/melsyd.rda")
+load(paste0(wd,"dataSet/melsyd.rda"))
 
 plot(melsyd[,"Economy.Class"], 
      main="Economy class passengers: Melbourne-Sydney",
@@ -87,7 +89,7 @@ A simpler time series data is available below:
 
 ```{r Plot of a Simpler Time Series data} 
 
-load("~/R Projects/Forecasting-Tutorial/dataSet/a10.rda")
+load(paste0(wd,"dataSet/a10.rda"))
 
 plot(a10,
 ylab="$ million",
@@ -112,7 +114,7 @@ These plots are mainly used to visualize the data by season or a cycle which pro
 
 ```{R Seasonplot and monthplot using sample dataset}
 
-load("~/R Projects/Forecasting-Tutorial/dataSet/a10.rda")
+#load("~/R Projects/Forecasting-Tutorial/dataSet/a10.rda")
 
 seasonplot(a10,
 ylab="$ million",
@@ -376,5 +378,25 @@ However, looking at the tsdata plot, a transformation may not be necessary.
 
 # CALENDAR ADJUSTMENTS:
 
-These adjustments are done to elimate the differences due to the calendar period
+These adjustments are done to elimate the differences due to the calendar period. In the below scenario, there can be some differences on the monthly milk production due to variying month periods across the years. To eliminate this effect, when we calculate the average production of milk per day, the trend and seasonality is much more smoother
 
+```{r Calendar Adjustment Example Code}
+data(milk)
+
+monthdays <- rep(c(31,28,31,30,31,30,31,31,30,31,30,31),14)
+ monthdays[26 + (4*12)*(0:2)] <- 29
+par(mfrow=c(2,1))
+plot(milk, main="Monthly milk production per cow",
+   ylab="Pounds",xlab="Years")
+plot(milk/monthdays, main="Average milk production per cow per day", 
+   ylab="Pounds", xlab="Years")
+
+```
+
+# POPULATION ADJUSTMENTS
+
+In any data where population is related, it is best to take considerations on per capita basis rather than the total number. For instance, when studying the number of hospital beds in a region over time, it is always better to consider the number of beds available per 100 or 1000 individuals rather than total number of beds. This is to eliminate the population error: Consider that the beds are increasing in a region, however when the population increases much faster than the beds, though the number of beds increased as a whole, they are not enough for the growing population. Studying by per capita basis will eliminate this issue.
+
+#INFLATION ADJUSTMENTS
+
+A $200K house worth today is not the same 20 years ago. This is due to inflation changes. To make inflation adjustments, price index is used which are supplied usually by a government agency. If $z_t$ denotes the price index, and $y_t$ denotes the price of the house at time $t$, then $x_t$ = $y_t$/$z_t$*$z_2000$ gives the adjusted price of the house at year 2000 dollar values. For consumer goods, a common price index is Consumer Price Index (or CPI)
