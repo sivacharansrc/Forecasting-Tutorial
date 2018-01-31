@@ -1,4 +1,3 @@
-getwd()
 ---
 title: "Time Series Forecasting"
 author: "Siva Chandrasekar"
@@ -19,7 +18,8 @@ wd <- "C:/Users/SSOMA/OneDrive - Monsanto/My R Projects/Machine Learning Project
 ```
 
 
-# TIME SERIES FORECASTING
+# The Forecaster's Toolbox
+
 This repository for Forecasting Tutorial using Rob Hyndmann's source
 
 This project has all the codes that will be described in Rob Hyndmann's tutorial available at https://www.otexts.org/fpp/2/4
@@ -108,7 +108,7 @@ The above graph of Antibiotic drug sales shows the following characteristics:
 
 Any model used to predict the antibiotic sales should take in to account on the seasonality, and the slow but steady raising trend.
 
-## SEASONAL PLOT AND MONTH PLOT
+### SEASONAL PLOT AND MONTH PLOT
 
 These plots are mainly used to visualize the data by season or a cycle which provides better idea to the seasonality behind the data
 
@@ -141,7 +141,7 @@ monthplot(tsdata,
 
 ```
 
-## SCATTER PLOT
+### SCATTER PLOT
 
 Scatter plots are useful to find the **relations betweek variables**. These plots can also be useful to find the strength of the relationship between a predictor variable and predicted variable.
 
@@ -170,7 +170,7 @@ pairs(fuel[,-c(1:2,4,7)], pch=10)
 
 Note that scatter plots should be used with *continuous variables* for finding the relationship. Ordinal or factors do not provide much information.
 
-# NUMERICAL SUMMARIES
+## NUMERICAL DATA SUMMARIES
 
 **Percentiles** are very useful for describing the distribution of the data. 
 
@@ -193,7 +193,7 @@ sd(fuel$Carbon)
 
 ```
 
-## BIVARIATE STATISTICS
+### BIVARIATE STATISTICS
 
 Most common bivariate statistics is *correlation coefficient*. This is useful to measure the relationship between two variables. The expression can be explained as below:
 
@@ -201,7 +201,7 @@ Most common bivariate statistics is *correlation coefficient*. This is useful to
 
 The value of correlation coefficient lies between -1 and +1, the positive values indicating linear relationship, whereas the negative values represent non-linear relationship.
 
-## AUTO CORRELATION FACTOR
+### AUTO CORRELATION FACTOR
 
 **Auto Correlation Factor (ACF)** are used in Time Series for finding the relation between lagged values of time series. For instance, $r_1$  measures the relation between time $y_t$ and $y_{t_-1}$, and $r_2$ measures the relationship between $y_t$ and $y_{t-2}$
 
@@ -231,7 +231,7 @@ acf(tsdata)
      
 In the beer plot, we can see that there are spikes for every 4 lags, and troughs for every two lags before the spikes. This can also mean that the data has some kind of seasonality every four months
 
-## WHITE NOISE
+### WHITE NOISE
 
 A scenario where a time series data shows no correlation. 
 
@@ -245,11 +245,11 @@ acf(x)
 
 In white noise, the expectation is that the ACF is close to zero. In other words, 95% of the ACF lies within $\pm \frac{2}{\sqrt{T}}$ where T is the length of time series
 
-# SIMPLE FORECASTING METHODS
+## SIMPLE FORECASTING METHODS
 
 Some forecasting methods are very simple but surprisingly effective. There are four simple forecasting methods that can be used for benchmarking purpose.
 
-## AVERAGE METHOD:
+### AVERAGE METHOD:
 
 Simply done by taking the forecast of the historical values. 
 
@@ -262,7 +262,7 @@ meanf(tsdata, 12)
 
 ```
 
-## NAIVE METHOD
+### NAIVE METHOD
 
 This method works on the pricinple that all future values are based on the last observed value ($y_T$). This works remarkable well for economic and financial timeseries.
 
@@ -274,7 +274,7 @@ rwf(tsdata, 12) #Alternate way
 
 ```
 
-## SEASONAL NAIVE:
+### SEASONAL NAIVE:
 
 Forecast is said to be the last observed value from the previous season. This method works very good for seasonal data. 
 
@@ -289,7 +289,7 @@ tail(tsdata, 12) #For reference.
 
 ```
 
-## Drift Method for forecasting
+### Drift Method for forecasting
 
 A variation of the Naive method where the forecasts are allowed to increase or decrease, based on the amount of change over time (the drift) is set to be the average change seen in the historical data
 
@@ -338,11 +338,11 @@ legend("bottomleft",lty=1,col=c(4,2,3,6),
   legend=c("Mean method","Naive method","Seasonal naive method", "Drift Method"))
 
 ```
-# TRANSFORMATIONS AND ADJUSTMENTS:
+## TRANSFORMATIONS AND ADJUSTMENTS:
 
 **Transformations** are performed over time series data in order to simplify the pattern in the historical data by removing known variations or by making the patterns more consistent across the data. Four types of transformations exist: mathematical transformations, calendar adjustments, population adjustments, and inflation adjustments.
 
-# MATHEMATICAL TRANSFORMATIONS
+### MATHEMATICAL TRANSFORMATIONS
 
 These are performed on time series which show an increasing or decreasing level. One such example of mathematical transformation is the lograthmic scale. If $y_t$ represents the time series data, then $w_t$ = $log(y_t)$.
 
@@ -376,7 +376,7 @@ In the above graphs, the season variation is not clearly visible in the actual d
 
 However, looking at the tsdata plot, a transformation may not be necessary.
 
-# CALENDAR ADJUSTMENTS:
+### CALENDAR ADJUSTMENTS:
 
 These adjustments are done to elimate the differences due to the calendar period. In the below scenario, there can be some differences on the monthly milk production due to variying month periods across the years. To eliminate this effect, when we calculate the average production of milk per day, the trend and seasonality is much more smoother
 
@@ -393,10 +393,42 @@ plot(milk/monthdays, main="Average milk production per cow per day",
 
 ```
 
-# POPULATION ADJUSTMENTS
+### POPULATION ADJUSTMENTS
 
 In any data where population is related, it is best to take considerations on per capita basis rather than the total number. For instance, when studying the number of hospital beds in a region over time, it is always better to consider the number of beds available per 100 or 1000 individuals rather than total number of beds. This is to eliminate the population error: Consider that the beds are increasing in a region, however when the population increases much faster than the beds, though the number of beds increased as a whole, they are not enough for the growing population. Studying by per capita basis will eliminate this issue.
 
-#INFLATION ADJUSTMENTS
+### INFLATION ADJUSTMENTS
 
 A $200K house worth today is not the same 20 years ago. This is due to inflation changes. To make inflation adjustments, price index is used which are supplied usually by a government agency. If $z_t$ denotes the price index, and $y_t$ denotes the price of the house at time $t$, then $x_t$ = $y_t$/$z_t$*$z_2000$ gives the adjusted price of the house at year 2000 dollar values. For consumer goods, a common price index is Consumer Price Index (or CPI)
+
+## Evaluating Forecast Accuracy:
+
+###### Scale Dependent Errors:
+
+The forecast error is simply $e_i$ = $y_i$ - $\hat{y_i}$ which is on the same scale on the data. Such errors are scale dependent, and cannot be used to compare between series  that are on different scales.
+
+The two most commonly used scale dependent measures are:
+
+1. Mean Absolute Error: $MAE$ = $mean(|e_i|)$
+2. Root Mean Square Error: $RMSE$ = $\sqrt{mean(|e_i^{2}|)}$
+
+###### Percentage Errors:
+
+Percentage Errors are scale independent, and so are frequently used to measure forecast performance between different datasets.$p_i = 100 * e_i/y_i$
+
+Mean Absolute Percentage Error: $MAPE = mean(|p_i|)$
+
+MAPE cannot be used when there are valid cases where the Actuals can be zero. For instance, the sales for a particular product may be seasonal and there are chances that the sales of the product is zero off season. Or, when forecasting temperature there are possibilities that the actual temperature can be zero. On such cases, the MAPE cannot be used as it may be equal to $\infty$ 
+
+```{r Measuring accuracy of the forecasts}
+
+beer3 <- window(ausbeer, start=2006)
+accuracy(beerfit1, beer3)
+accuracy(beerfit2, beer3)
+accuracy(beerfit3, beer3)
+accuracy(beerfit4, beer3)
+
+```
+
+Thus from the above, it is obvious that the snaive method has the best forecast accuracy among the rest.
+
