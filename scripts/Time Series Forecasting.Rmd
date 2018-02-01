@@ -432,3 +432,18 @@ accuracy(beerfit4, beer3)
 
 Thus from the above, it is obvious that the snaive method has the best forecast accuracy among the rest.
 
+###### Residual Diagnostics:
+
+The difference between the predicted value and the actual value is called the residual. $Residual \space (e_i) = y_i - \hat{y_i}$.
+
+A good forecating method will have the following characteristics of residuals:
+- The residuals are uncorrelated. If they are correlated, then there is some information in the residuals that should be used in determining forecast
+
+- Mean of residual is zero. If not, then the forecast is biased.
+
+- Residuals have constant variance
+
+- Residuals are normally distributed
+
+
+Fixing a forecast with a residual having a mean is easy. The forecast is adjusted by adding mean to all hte predicted values.
