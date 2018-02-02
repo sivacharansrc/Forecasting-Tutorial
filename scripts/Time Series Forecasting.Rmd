@@ -446,4 +446,42 @@ A good forecating method will have the following characteristics of residuals:
 - Residuals are normally distributed
 
 
-Fixing a forecast with a residual having a mean is easy. The forecast is adjusted by adding mean to all hte predicted values.
+Fixing a forecast with a residual having a mean is easy. The forecast is adjusted by adding mean to all the predicted values.
+
+```{r Residuals of dow jones data}
+
+dj2 <- window(dj, end=250)
+par(mfrow = c(2,2))
+plot(dj2, main="Dow Jones Index (daily ending 15 Jul 94)", ylab="", xlab="Day")
+res <- residuals(naive(dj2))
+plot(res, main="Residuals from naive method", ylab="", xlab="Day")
+Acf(res, main="ACF of residuals")
+hist(res, nclass="FD", main="Histogram of residuals")
+
+
+```
+
+From the graphs, it looks like there are no significant correlation in the residuals, which means all correlations are addressed in the forecast. 
+
+Some additional tests are available for testing the correlation:
+
+Portmanteau test for correlation or the Box-Pierce test, and Ljung-Box test are used for checking if there are any correlations in the residuals, and if they are, are they due to sampling variation? A larger p-value supports the Null Hypothesis (i.e. any correlation existing are due to sampling variation, and that the population may be devoid of any correlation), whereas a smaller value rejects the Null Hypothesis, and suggests that the forecast can be improved by utilizing the correlation that are available within the residuals.
+
+```{r Box-Pierce Test & Ljung-Box Test for Correlation}
+
+# lag=h: h=10 for non seasonal dataset, or h = 2m for seasonal dataset, where m is the seasonal period
+# fitdf = K: K is the number of parameters. Mostly for ts, K= 0 
+Box.test(res, lag=10, fitdf=0) # Box-Pierce Test
+
+Box.test(res,lag=10, fitdf=0, type="Lj") # Ljung-Box Test
+
+```
+
+###### Prediction Intervals:
+
+The range to which a prediction can vary is called the prediction Interval. We can have a 95% prediction interval, or 80% interval as required. If we are forecasting one step ahead, the sd of forecast is always almost equal to the sd of residuals, when there are no parameters involved in forecasting (in case of naive). When parameters do exist, the sd of forecast tend to be higher than residuals, but is very minimal difference that it is ignored.
+
+Prediction Interval at 95%: $\hat{y_i}\space \pm \space 1.96\hat{\sigma}$
+Prediction Interval at 80%: $\hat{y_i}\space \pm \space 1.28\hat{\sigma}$
+
+where $\hat{y_i}$ is the estimated forecast, and $\hat{\sigma}$ is the estimate of sd of the forecast distribution. The multiplier 1.96 or 1.28 are for 95% and 80% respectively.For different percentage of prediction intervals, different multipliers to be used. (Additional information on the multiplier number is available here: $\href{https://www.otexts.org/fpp/2/7}{OTEXT LINK}$)
