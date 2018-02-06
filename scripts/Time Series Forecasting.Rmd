@@ -485,3 +485,45 @@ Prediction Interval at 95%: $\hat{y_i}\space \pm \space 1.96\hat{\sigma}$
 Prediction Interval at 80%: $\hat{y_i}\space \pm \space 1.28\hat{\sigma}$
 
 where $\hat{y_i}$ is the estimated forecast, and $\hat{\sigma}$ is the estimate of sd of the forecast distribution. The multiplier 1.96 or 1.28 are for 95% and 80% respectively.For different percentage of prediction intervals, different multipliers to be used. (Additional information on the multiplier number is available here: $\href{https://www.otexts.org/fpp/2/7}{OTEXT LINK}$)
+
+## SIMPLE REGRESSION
+
+#### Simple Linear Model: In this model, the forecast and predictor variables are assumed to be related by a simple linear model:
+
+$y\space=\space\beta_0+\beta_1x+e$
+
+Here, the parameter $\beta_0$ is the predicted value of y, when x = 0, and $\beta_1$ is the predicted increase of y, when x increases by 1 unit. In a linear model, the regression line is reprented by a straight line. However, in reality not all the observed values lie in a straight line. The distance between the predicted value along the regression line, and the observed value is the error or the residual. In other words, $\beta_0+\beta_1x$ captures the explanatory part or the systematic part, whereas $e$ captures the deviation from prediction or the random error.
+
+In a good model, we assume that:
+- the errors sum up to zero, or the mean is equal to zero, else the forecast will be systematically biased
+- are not correlated, else there is information available in the errors that can be used in forecast
+- are unrelated to the predictor variable, else there is more information that is available in the error that should be used in the forecast
+
+###### Least Square Estimation:
+The optimal values for $\beta_0$ and $\beta_1$ can be determined by minimizing the sum of the squares of the errors.  
+
+$$\sum_{i=1}^N {e_i}^2 = \sum_{i=1}^N (y_i-\beta_0-\beta_1x_i)^2$$
+
+###### Regression and Correlation:
+
+Correlation and regression are closely associated with each other. The stronger the correlation exists between x and y, the more closer are the observed values lie along the regression line. The parameter $\beta_1$ can also be expressed as $$\hat\beta_1 = r\frac{S_y}{S_x} $$
+
+where, $S_y$ and $S_x$ are respective standard deviations.
+
+Here is a simple way to draw a regression line:
+
+```{r Generating regression coefficients for cars data}
+
+plot(Carbon ~ City,xlab="City (mpg)",
+  ylab="Carbon footprint (tons per year)",data=fuel, col="dark green", lwd =3)
+fit <- lm(Carbon ~ City, data=fuel)
+abline(fit)
+
+summary(fit)
+
+
+```
+
+###### Interpretting the Regression Results:
+
+From the above regresion summary, $\beta_0$ is 12.53 (which says the carbon foot print would be 12.53 tonnes per year, provided x is zero), and the carbon foot print decreases by 0.22 tones per year for increase in 1 mpg (which is $\beta_0$)
