@@ -488,7 +488,9 @@ where $\hat{y_i}$ is the estimated forecast, and $\hat{\sigma}$ is the estimate 
 
 ## SIMPLE REGRESSION
 
-#### Simple Linear Model: In this model, the forecast and predictor variables are assumed to be related by a simple linear model:
+#### Simple Linear Model: 
+
+In this model, the forecast and predictor variables are assumed to be related by a simple linear model:
 
 $y\space=\space\beta_0+\beta_1x+e$
 
@@ -527,3 +529,31 @@ summary(fit)
 ###### Interpretting the Regression Results:
 
 From the above regresion summary, $\beta_0$ is 12.53 (which says the carbon foot print would be 12.53 tonnes per year, provided x is zero), and the carbon foot print decreases by 0.22 tones per year for increase in 1 mpg (which is $\beta_0$)
+
+###### Evaluating Regression Model:
+
+For a good linear regression model, the predictor/regressor/independent variable and the dependent variable should be in linear relation, and the residuals should have a constant variance (i.e. homocedastic nature), and exhibit no to little correlation with the predictor variables.
+
+```{r Evaluating Regression Model}
+res <- residuals(fit)
+plot(res~City, main="Residuals Plot", data = fuel, col = "red", lwd = 3)
+abline(0,0)
+
+```
+
+From the above residual plot, it is obvious that they exhibit some kind of relation with the predictor variable, and is not homoscedastic, as it looks like some pattern exists within the plot. For instance, most of the lower and upper values of mpg have positive values, and the values between 20 and 30 mpg fall below 0. This suggests that a simple linear model is not not appropriate, and a non linear model is required.
+
+An outlier that has an impact on the regression line is called influential observation. Though such outliers may have an impact on the regression line, it does not always leave a large residual. For clear understanding, refer $\href{https://www.otexts.org/fpp/2/7}{Influential\space Observation}$
+
+Goodness of fit: In linear regressions, the goodness of a fit is measured with the help of $R^2$ which is nothing but the square of the correlation between the predicted values and the actual observations.
+
+$$R^2 = \frac{\sum(\hat y_i - \bar y)^2}{\sum(y_i - \bar y)^2}$$
+If the predictions are close to observed values, then the value of $R^2$ will be close to 1, else close to 0. $R^2$ lies between 1 and 0. In simple linear regression, the value of $R^2$ is also equal to the square of the correlation between y and x. 
+
+
+###### Standard Error of the Regression
+
+This is one other measure to estimate the goodness of the model. This measure is obtained by calculating the standard deviation of the residuals.
+
+$$s_e = \sqrt{\frac{1}{N-2} \sum^N_{i=1} e^2_i} $$
+We have N-2, because there are two parameters involved in the linear regression. (i.e. the intercept and the slope). We can compare this error to the sample mean of yy or with the standard deviation of yy to gain some perspective on the accuracy of the model. 
