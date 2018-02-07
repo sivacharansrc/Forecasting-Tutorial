@@ -547,6 +547,7 @@ An outlier that has an impact on the regression line is called influential obser
 
 **Goodness of fit:** In linear regressions, the goodness of a fit is measured with the help of $R^2$ which is nothing but the square of the correlation between the predicted values and the actual observations.
 
+
 $$R^2 = \frac{\sum(\hat y_i - \bar y)^2}{\sum(y_i - \bar y)^2}$$
 If the predictions are close to observed values, then the value of $R^2$ will be close to 1, else close to 0. $R^2$ lies between 1 and 0. In simple linear regression, the value of $R^2$ is also equal to the square of the correlation between y and x. 
 
@@ -556,4 +557,5 @@ If the predictions are close to observed values, then the value of $R^2$ will be
 This is one other measure to estimate the goodness of the model. This measure is obtained by calculating the standard deviation of the residuals.
 
 $$s_e = \sqrt{\frac{1}{N-2} \sum^N_{i=1} e^2_i} $$
+
 We have N-2, because there are two parameters involved in the linear regression. (i.e. the intercept and the slope). We can compare this error to the sample mean of yy or with the standard deviation of yy to gain some perspective on the accuracy of the model. 
