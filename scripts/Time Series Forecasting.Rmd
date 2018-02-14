@@ -501,12 +501,12 @@ In a good model, we assume that:
 - are not correlated, else there is information available in the errors that can be used in forecast
 - are unrelated to the predictor variable, else there is more information that is available in the error that should be used in the forecast
 
-###### Least Square Estimation:
+####Least Square Estimation:
 The optimal values for $\beta_0$ and $\beta_1$ can be determined by minimizing the sum of the squares of the errors.  
 
 $$\sum_{i=1}^N {e_i}^2 = \sum_{i=1}^N (y_i-\beta_0-\beta_1x_i)^2$$
 
-###### Regression and Correlation:
+#### Regression and Correlation:
 
 Correlation and regression are closely associated with each other. The stronger the correlation exists between x and y, the more closer are the observed values lie along the regression line. The parameter $\beta_1$ can also be expressed as $$\hat\beta_1 = r\frac{S_y}{S_x} $$
 
@@ -526,11 +526,11 @@ summary(fit)
 
 ```
 
-###### Interpretting the Regression Results:
+**Interpretting the Regression Results:**
 
 From the above regresion summary, $\beta_0$ is 12.53 (which says the carbon foot print would be 12.53 tonnes per year, provided x is zero), and the carbon foot print decreases by 0.22 tones per year for increase in 1 mpg (which is $\beta_0$)
 
-###### Evaluating Regression Model:
+####Evaluating Regression Model:
 
 For a good linear regression model, the predictor/regressor/independent variable and the dependent variable should be in linear relation, and the residuals should have a constant variance (i.e. homocedastic nature), and exhibit no to little correlation with the predictor variables.
 
@@ -538,6 +538,7 @@ For a good linear regression model, the predictor/regressor/independent variable
 res <- residuals(fit)
 plot(res~City, main="Residuals Plot", data = fuel, col = "red", lwd = 3)
 abline(0,0)
+hist(res)
 
 ```
 
@@ -552,10 +553,42 @@ $$R^2 = \frac{\sum(\hat y_i - \bar y)^2}{\sum(y_i - \bar y)^2}$$
 If the predictions are close to observed values, then the value of $R^2$ will be close to 1, else close to 0. $R^2$ lies between 1 and 0. In simple linear regression, the value of $R^2$ is also equal to the square of the correlation between y and x. 
 
 
-###### Standard Error of the Regression
+**Standard Error of the Regression**
 
 This is one other measure to estimate the goodness of the model. This measure is obtained by calculating the standard deviation of the residuals.
 
 $$s_e = \sqrt{\frac{1}{N-2} \sum^N_{i=1} e^2_i} $$
 
 We have N-2, because there are two parameters involved in the linear regression. (i.e. the intercept and the slope). We can compare this error to the sample mean of yy or with the standard deviation of yy to gain some perspective on the accuracy of the model. 
+
+#### Forecasting With Regression:
+
+The $\hat y$ obtatined by above are not true forecasts, as the x values are already observed values. The true forecast are generated when the prediction is carried out for unknown values of x, using the generated model.
+
+Assuming that the residuals are normally distributed, an approximate 95% forecast interval is given by: 
+
+$\hat y \space \pm \space 1.96 s_e \sqrt {1+ \frac{1}{N} + \frac{(x- \bar x)^2}{(N-1)s_x^2}}$,
+
+where N = Total Number of Observations
+$\bar x$ is the mean of the observed values
+$s_x$ is the SD of the observed values
+
+Similarly, an 80% forecast interval can be obtained by replacing 1.96 by 1.28. The above equation shows that the forecast interval becomes wider when the value of x moves far away from mean of x. i.e. we are more certain on the forecast when the predictor variable is close to the sample mean.
+
+The estimated regression line in the Car data example is $\hat y = 12.53−0.22x$.
+
+For the Chevrolet Aveo (the first car in the list) $x_1$ = 25 mpg and $y_1$ =6.6 tons of CO2 per year. The model returns a fitted value of $\hat y_1$ = 7.00, i.e. $e_1$ = −0.4. For a car with City driving fuel economy $x$ =30 mpg, the average footprint forecasted is $\hat y$ = 5.90 tons of CO2 per year. The corresponding 95% and 80% forecast intervals are (4.95,6.84) and (5.28,6.51) respectively (calculated using R)
+
+```{r Forecast with 80% and 95% Prediction Intervals}
+fitted(fit)[1]
+fcast <- forecast(fit, newdata=data.frame(City=30))
+plot(fcast, xlab="City (mpg)", ylab="Carbon footprint (tons per year)")
+# The displayed graph uses jittering, while the code above does not.
+
+
+```
+
+
+#### Statistical Inference:
+
+
