@@ -6,6 +6,7 @@ output: html_document
 ---
 
 ```{r Loading Required Libraries, echo=FALSE, results='hide', message=FALSE, warning=FALSE}
+#install.packages(c("dplyr","fpp","plotly","dygraphs"))
 rm(list = ls())
 options(scipen = 999)
 library(dplyr)
@@ -13,6 +14,8 @@ library(fpp)
 library(plotly) #install.packages(c(fpp,dygraphs))
 library(dygraphs)
 wd <- "C:/Users/SSOMA/OneDrive - Monsanto/My R Projects/Machine Learning Projects/Time Series Forecasting/"
+
+wd <- "C:/Users/sivac/Documents/R Projects/Forecasting-Tutorial/"
 
 
 ```
@@ -580,9 +583,9 @@ The estimated regression line in the Car data example is $\hat y = 12.53−0.22x
 For the Chevrolet Aveo (the first car in the list) $x_1$ = 25 mpg and $y_1$ =6.6 tons of CO2 per year. The model returns a fitted value of $\hat y_1$ = 7.00, i.e. $e_1$ = −0.4. For a car with City driving fuel economy $x$ =30 mpg, the average footprint forecasted is $\hat y$ = 5.90 tons of CO2 per year. The corresponding 95% and 80% forecast intervals are (4.95,6.84) and (5.28,6.51) respectively (calculated using R)
 
 ```{r Forecast with 80% and 95% Prediction Intervals}
-fitted(fit)[1]
-fcast <- forecast(fit, newdata=data.frame(City=30))
-plot(fcast, xlab="City (mpg)", ylab="Carbon footprint (tons per year)")
+#fitted(fit)[1]
+#fcast <- forecast(fit, newdata=data.frame(City=30))
+#plot(fcast, xlab="City (mpg)", ylab="Carbon footprint (tons per #year)")
 # The displayed graph uses jittering, while the code above does not.
 
 
